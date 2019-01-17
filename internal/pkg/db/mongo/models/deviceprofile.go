@@ -28,8 +28,7 @@ type DeviceProfile struct {
 	Manufacturer    string            `bson:"manufacturer"`
 	Model           string            `bson:"model"`
 	Labels          []string          `bson:"labels"`
-	Objects         interface{}       `bson:"objects"`
-	DeviceResources []DeviceObject    `bson:"deviceResources"`
+	DeviceResources []DeviceResource  `bson:"deviceResources"`
 	Resources       []ProfileResource `bson:"resources"`
 	Commands        []mgo.DBRef       `bson:"commands"`
 }
@@ -45,7 +44,6 @@ func (dp *DeviceProfile) ToContract(transform commandTransform) (c contract.Devi
 	c.Manufacturer = dp.Manufacturer
 	c.Model = dp.Model
 	c.Labels = dp.Labels
-	c.Objects = dp.Objects
 	c.DescribedObject = dp.DescribedObject.ToContract()
 
 	for _, dr := range dp.DeviceResources {
@@ -77,12 +75,11 @@ func (dp *DeviceProfile) FromContract(c contract.DeviceProfile, transform comman
 	dp.Manufacturer = c.Manufacturer
 	dp.Model = c.Model
 	dp.Labels = c.Labels
-	dp.Objects = c.Objects
 
 	dp.DescribedObject.FromContract(c.DescribedObject)
 
 	for _, dr := range c.DeviceResources {
-		var resource DeviceObject
+		var resource DeviceResource
 		resource.FromContract(dr)
 		dp.DeviceResources = append(dp.DeviceResources, resource)
 	}
@@ -121,19 +118,17 @@ func (dp *DeviceProfile) GetBSON() (interface{}, error) {
 		Manufacturer    string            `bson:"manufacturer"` // Manufacturer of the device
 		Model           string            `bson:"model"`        // Model of the device
 		Labels          []string          `bson:"labels"`       // Labels used to search for groups of profiles
-		Objects         interface{}       `bson:"objects"`      // JSON data that the device service uses to communicate with devices with this profile
-		DeviceResources []DeviceObject    `bson:"deviceResources"`
+		DeviceResources []DeviceResource  `bson:"deviceResources"`
 		Resources       []ProfileResource `bson:"resources"`
 		Commands        []mgo.DBRef       `bson:"commands"` // List of commands to Get/Put information for devices associated with this profile
 	}{
 		DescribedObject: dp.DescribedObject,
 		Id:              dp.Id,
-		Uuid:			 dp.Uuid,
+		Uuid:            dp.Uuid,
 		Name:            dp.Name,
 		Manufacturer:    dp.Manufacturer,
 		Model:           dp.Model,
 		Labels:          dp.Labels,
-		Objects:         dp.Objects,
 		DeviceResources: dp.DeviceResources,
 		Resources:       dp.Resources,
 		Commands:        dp.Commands,
@@ -150,8 +145,7 @@ func (dp *DeviceProfile) SetBSON(raw bson.Raw) error {
 		Manufacturer    string            `bson:"manufacturer"` // Manufacturer of the device
 		Model           string            `bson:"model"`        // Model of the device
 		Labels          []string          `bson:"labels"`       // Labels used to search for groups of profiles
-		Objects         interface{}       `bson:"objects"`      // JSON data that the device service uses to communicate with devices with this profile
-		DeviceResources []DeviceObject    `bson:"deviceResources"`
+		DeviceResources []DeviceResource  `bson:"deviceResources"`
 		Resources       []ProfileResource `bson:"resources"`
 		Commands        []mgo.DBRef       `bson:"commands"` // List of commands to Get/Put information for devices associated with this profile
 	})
@@ -169,7 +163,6 @@ func (dp *DeviceProfile) SetBSON(raw bson.Raw) error {
 	dp.Manufacturer = decoded.Manufacturer
 	dp.Model = decoded.Model
 	dp.Labels = decoded.Labels
-	dp.Objects = decoded.Objects
 	dp.DeviceResources = decoded.DeviceResources
 	dp.Resources = decoded.Resources
 	dp.Commands = decoded.Commands

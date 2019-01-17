@@ -16,7 +16,7 @@ package models
 
 import contract "github.com/edgexfoundry/edgex-go/pkg/models"
 
-type DeviceObject struct {
+type DeviceResource struct {
 	Description string                 `bson:"description"`
 	Name        string                 `bson:"name"`
 	Tag         string                 `bson:"tag"`
@@ -24,7 +24,7 @@ type DeviceObject struct {
 	Attributes  map[string]interface{} `bson:"attributes"`
 }
 
-func (do *DeviceObject) ToContract() (c contract.DeviceObject) {
+func (do *DeviceResource) ToContract() (c contract.DeviceResource) {
 	c.Description = do.Description
 	c.Name = do.Name
 	c.Tag = do.Tag
@@ -34,7 +34,7 @@ func (do *DeviceObject) ToContract() (c contract.DeviceObject) {
 	return
 }
 
-func (do *DeviceObject) FromContract(c contract.DeviceObject) {
+func (do *DeviceResource) FromContract(c contract.DeviceResource) {
 	do.Description = c.Description
 	do.Name = c.Name
 	do.Tag = c.Tag
